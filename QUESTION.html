@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #quiz-container {
+            width: 50%;
+            padding: 20px;
+            background-color: #34495e;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #3498db;
+            text-align: center;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        .options button {
+            display: block;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        #result-container {
+            font-weight: bold;
+            margin-top: 12px;
+            text-align: center;
+            color: #3498db;
+        }
+
+        #gif {
+            display: none;
+            max-width: 100%;
+            margin-top: 12px;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .correct {
+            color: #2ecc71;
+        }
+
+        .incorrect {
+            color: #e74c3c;
+        }
+
+        #reset-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        #reset-btn:hover {
+            background-color: #2ecc71;
+        }
+    </style>
+
+
+    <title>Assignment</title>
+</head>
+
+<body>
+    <div id="quiz-container">
+        <h1>Online Assignment</h1>
+        <div id="question-container"></div>
+        <div class="options" id="options-container"></div>
+        <a href="app.html" class="btn">
+
+        <button onclick="submitAnswer()">Submit Answer</button></a>
+
+        <button id="reset-btn" onclick="resetGame()">Reset Game</button>
+        <div id="result-container"></div>
+        <div class="feedback" id="feedback-container"></div>
+        <img id="gif" src="" alt="GIF">
+    </div>
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of Canada?",
+                options: ["Toronto", "Ottawa", "Vancouver"],
+                correctAnswer: "Ottawa"
+            },
+            {
+                question: "Which programming language is also a snake?",
+                options: ["Java", "Python", "JavaScript"],
+                correctAnswer: "Python"
+            },
+            {
+                question: "What is 5 + 5?",
+                options: ["8", "10", "12"],
+                correctAnswer: "10"
+            },
+            {
+                question: "Which planet is known as the 'Red Planet'?",
+                options: ["Mars", "Venus", "Jupiter"],
+                correctAnswer: "Mars"
+            },
+            {
+                question: "What is the largest mammal on Earth?",
+                options: ["Elephant", "Blue Whale", "Giraffe"],
+                correctAnswer: "Blue Whale"
+            },
+            {
+                question: "Which country is known as the 'Land of the Rising Sun'?",
+                options: ["China", "Japan", "South Korea"],
+                correctAnswer: "Japan"
+            },
+            {
+                question: "What is the capital of Brazil?",
+                options: ["Sao Paulo", "Rio de Janeiro", "Brasilia"],
+                correctAnswer: "Brasilia"
+            },
+            {
+                question: "Who wrote 'The Great Gatsby'?",
+                options: ["F. Scott Fitzgerald", "Ernest Hemingway", "Jane Austen"],
+                correctAnswer: "F. Scott Fitzgerald"
+            },
+            {
+                question: "What is the currency of Japan?",
+                options: ["Yuan", "Won", "Yen"],
+                correctAnswer: "Yen"
+            },
+            {
+                question: "In which year did the Titanic sink?",
+                options: ["1912", "1920", "1931"],
+                correctAnswer: "1912"
+            },
+        ];
+
+        let currentQuestion = 0;
+
+        const questionContainer = document.getElementById("question-container");
+        const optionsContainer = document.getElementById("options-container");
+        const resultContainer = document.getElementById("result-container");
+        const feedbackContainer = document.getElementById("feedback-container");
+        const gifContainer = document.getElementById("gif");
+
+        function loadQuestion() {
+            const currentQuizData = quizData[currentQuestion];
+            questionContainer.innerText = currentQuizData.question;
+            optionsContainer.innerHTML = "";
+
+            currentQuizData.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.addEventListener("click", () => selectAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectAnswer(selectedOption) {
+            const currentQuizData = quizData[currentQuestion];
+
+            if (selectedOption === currentQuizData.correctAnswer) {
+                showFeedback("Correct!", true);
+            } else {
+                showFeedback("Incorrect.", false);
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            if (currentQuestion === quizData.length) {
+                resultContainer.innerText = "Assignmet completed";
+                gifContainer.src = "quiz-completed.gif"; // Replace with your image for quiz completion
+                gifContainer.style.display = "block";
+            }
+        }
+
+        function showFeedback(message, isCorrect) {
+            feedbackContainer.innerText = message;
+            feedbackContainer.className = isCorrect ? "feedback correct" : "feedback incorrect";
+        }
+
+        function resetGame() {
+            currentQuestion = 0;
+            loadQuestion();
+            resultContainer.innerText = "";
+            feedbackContainer.innerText = "";
+            gifContainer.style.display = "none";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+
+</html>
